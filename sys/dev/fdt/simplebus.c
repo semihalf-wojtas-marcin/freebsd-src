@@ -55,8 +55,6 @@ static device_t		simplebus_add_child(device_t dev, u_int order,
 static struct resource_list *simplebus_get_resource_list(device_t bus,
     device_t child);
 
-static ssize_t		simplebus_get_property(device_t bus, device_t child,
-    const char *propname, void *propvalue, size_t size);
 /*
  * ofw_bus interface
  */
@@ -354,7 +352,7 @@ simplebus_get_resource_list(device_t bus __unused, device_t child)
 	return (&ndi->rl);
 }
 
-static ssize_t
+ssize_t
 simplebus_get_property(device_t bus, device_t child, const char *propname,
     void *propvalue, size_t size)
 {

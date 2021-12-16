@@ -70,4 +70,7 @@ int simplebus_attach(device_t dev);
 int simplebus_attach_impl(device_t dev);
 int simplebus_detach(device_t dev);
 
+ssize_t simplebus_get_property(device_t bus, device_t child,
+    const char *propname, void *propvalue, size_t size);
+
 #endif	/* _FDT_SIMPLEBUS_H */

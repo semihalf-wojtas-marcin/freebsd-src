@@ -2717,17 +2717,29 @@ device_verbose(device_t dev)
 }
 
 ssize_t
-device_get_property(device_t dev, const char *prop, void *val, size_t sz)
+device_get_property(device_t dev, const char *prop, void *val, size_t sz,
+    device_property_type_t type)
 {
 	device_t bus = device_get_parent(dev);
 
-	return (BUS_GET_PROPERTY(bus, dev, prop, val, sz));
+	switch (type) {
+	case DEVICE_PROP_UINT32:
+		if (sz % 4 != 0)
+			return (-1);
+	case DEVICE_PROP_ANY:
+	case DEVICE_PROP_BUFFER:
+		break;
+	default:
+		return (-1);
+	}
+
+	return (BUS_GET_PROPERTY(bus, dev, prop, val, sz, type));
 }
 
 bool
 device_has_property(device_t dev, const char *prop)
 {
-	return (device_get_property(dev, prop, NULL, 0) >= 0);
+	return (device_get_property(dev, prop, NULL, 0, DEVICE_PROP_ANY) >= 0);
 }
 
 /**

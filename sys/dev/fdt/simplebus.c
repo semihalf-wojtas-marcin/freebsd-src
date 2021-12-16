@@ -354,14 +354,31 @@ simplebus_get_resource_list(device_t bus __unused, device_t child)
 
 ssize_t
 simplebus_get_property(device_t bus, device_t child, const char *propname,
-    void *propvalue, size_t size)
+    void *propvalue, size_t size, device_property_type_t type)
 {
 	phandle_t node = ofw_bus_get_node(child);
+
+	switch (type) {
+	case DEVICE_PROP_ANY:
+	case DEVICE_PROP_UINT32:
+	case DEVICE_PROP_BUFFER:
+		break;
+	default:
+		return (-1);
+	}
 
 	if (propvalue == NULL || size == 0)
 		return (OF_getproplen(node, propname));
 
-	return (OF_getencprop(node, propname, propvalue, size));
+	/*
+	 * Integer values are stored in BE format.
+	 * If caller declared that the underlying property type is uint32
+	 * we need to do the conversion to match host endianness.
+	 */
+	if (type == DEVICE_PROP_UINT32)
+		return (OF_getencprop(node, propname, propvalue, size));
+
+	return (OF_getprop(node, propname, propvalue, size));
 }
 
 static struct resource *

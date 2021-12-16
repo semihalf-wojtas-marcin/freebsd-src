@@ -79,7 +79,7 @@ CODE {
 
 	static ssize_t
 	null_get_property(device_t dev, device_t child, const char *propname,
-	    void *propvalue, size_t size)
+	    void *propvalue, size_t size, device_property_type_t type)
 	{
 		return (-1);
 	}
@@ -944,4 +944,5 @@ METHOD ssize_t get_property {
 	const char *_propname;
 	void *_propvalue;
 	size_t _size;
+	device_property_type_t type;
 } DEFAULT null_get_property;

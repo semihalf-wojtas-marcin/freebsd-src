@@ -61,6 +61,19 @@ typedef enum device_state {
 } device_state_t;
 
 /**
+ * @brief Device proprty types.
+ *
+ * Those are used by bus logic to encode requested properties,
+ * e.g. in DT all properties are stored as BE and need to be converted
+ * to host endianness.
+ */
+typedef enum device_property_type {
+	DEVICE_PROP_ANY = 0,
+	DEVICE_PROP_BUFFER = 1,
+	DEVICE_PROP_UINT32 = 2,
+} device_property_type_t;
+
+/**
  * @brief Device information exported to userspace.
  * The strings are placed one after the other, separated by NUL characters.
  * Fields should be added after the last one and order maintained for compatibility
@@ -631,7 +644,8 @@ int	device_set_unit(device_t dev, int unit);	/* XXX DONT USE XXX */
 int	device_shutdown(device_t dev);
 void	device_unbusy(device_t dev);
 void	device_verbose(device_t dev);
-ssize_t	device_get_property(device_t dev, const char *prop, void *val, size_t sz);
+ssize_t device_get_property(device_t dev, const char *prop, void *val, size_t sz,
+    device_property_type_t type);
 bool device_has_property(device_t dev, const char *prop);
 
 /*
